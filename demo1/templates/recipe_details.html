@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Details</title>
+</head>
+<body>
+    <h1>{{ recipe_name }}</h1>
+    <p>{{ recipe_details }}</p>
+
+    <form action="{{ url_for('download_recipe', recipe_name=recipe_name) }}" method="get">
+        <button type="submit">Download Recipe PDF</button>
+    </form>
+</body>
+</html>

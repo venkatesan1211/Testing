@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+
+        form {
+            margin: 0 auto;
+            max-width: 400px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        form:hover {
+            transform: scale(1.05);
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .recipe-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .recipe {
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 250px;
+            transition: transform 0.3s ease;
+        }
+
+        .recipe:hover {
+            transform: scale(1.05);
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        h3 {
+            margin-bottom: 10px;
+        }
+
+        a {
+            text-decoration: none;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+<form action="{{ url_for('recipe_search') }}" method="get">
+    <label for="type">Select Type:</label>
+    <select name="type" id="type" required>
+        <option value="veg">Veg</option>
+        <option value="nonveg">Non-Veg</option>
+    </select>
+
+    <label for="number">Select Number of Recipes (up to 50):</label>
+    <input type="number" name="number" min="1" max="50" required>
+
+    <button type="submit">Search</button>
+</form>
+{% if recipes %}
+    <div class="recipe-container">
+        {% for recipe in recipes %}
+            <div class="recipe">
+                <a href="{{ url_for('view_recipe_details', recipe_number=recipe.recipe_number) }}">
+                    <img src="{{ url_for('static', filename='images/recipeimages/' + recipe.recipe_image) }}" alt="{{ recipe.recipe_name }}">
+                </a>
+                <h3>{{ recipe.recipe_name }}</h3>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% if request.args.get('type') and request.args.get('number') %}
+    {% if recipes %}
+        {# Display recipes #}
+    {% else %}
+        <p>No recipes found.</p>
+    {% endif %}
+{% elif request.args.get('type') or request.args.get('number') %}
+    <p>Invalid inputs. Please select a valid type and number of recipes.</p>
+{% endif %}
+
+
+</body>
+</html>

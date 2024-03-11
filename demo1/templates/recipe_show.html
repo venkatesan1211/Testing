@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ recipe.recipe_name }} - Recipe Details</title>
+    <!-- Add any additional styling if needed -->
+</head>
+<body>
+    <h1>{{ recipe.recipe_name }}</h1>
+    <img src="{{ url_for('static', filename='images/recipeimages/' + recipe.recipe_image) }}" alt="{{ recipe.recipe_name }}" style="max-width: 450px; height: 450px;">
+    
+    <h2>Ingredients:</h2>
+    <h3>{{ recipe.recipe_ingredients }}</h3>
+
+    <h2>Details:</h2>
+    <p>{{ recipe.recipe_details }}</p>
+
+    <!-- Add any additional information you want to display -->
+
+    <a href="{{ url_for('recipe_search') }}">Back to Recipe Search</a>
+</body>
+</html>

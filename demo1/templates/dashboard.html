@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Add this in the <head> section -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Anime.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.0/anime.min.js"></script>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <title>Dashboard</title>
+    
+</head>   
+<body background="static\dashnew.jpeg">
+    <div class="sidebar">
+        <div class="welcome">
+            <i><h3>Welcome, {{ username }}!</h3></i>
+        </div>
+        <div class="typing-container">
+            <p id="typing-text" class="color-changing"></p>
+        </div>
+        <div class="menu-container">
+            <a class="menu-item" href="{{ url_for('recipe_search') }}">Recipe Search</a>
+            <a class="menu-item" href="{{ url_for('add_recipes') }}">Add Recipes</a>
+            <a class="menu-item" href="{{ url_for('to_do_list_recipe') }}">To-Do List Recipe</a>
+            <a class="menu-item" href="{{ url_for('about') }}">About</a>
+            <a class="menu-item" href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </div>
+    
+    <div class="chart-container">
+        <h1>Recipe Statistics Chart</h1>
+        <canvas id="recipeStatisticsChart"></canvas>
+    </div>
+    
+    <img src="{{ url_for('static', filename='hero.png') }}" alt="dashimg" class="dashimg">
+</body>
+</html>

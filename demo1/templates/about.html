@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>About Us</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-size:cover;
+            background-repeat: no-repeat;
+            margin: 0;
+            padding: 0;
+            overflow: scroll;
+           
+        }
+
+        .about-container {
+            max-width: 800px;
+            margin: 50px auto;
+            text-align: center;
+            padding: 20px;
+            background-color: #ffffff00;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1,h3 {
+            color: #dedddbea;
+            font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            font-size:50px;
+            
+        }
+
+        p {
+            color: #d59e45;
+            font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            line-height: 1.5;
+            font-size: 32px;
+            font-weight:bold;
+            margin-bottom: 25px; /* Add margin at the bottom of paragraphs */
+        }
+
+        .image-gallery {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+        }
+
+        .image-item {
+            overflow: hidden;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-right: 20px; /* Adjust the margin to add space between images */
+        }
+
+        .image-item:last-child {
+            margin-right: 0; /* Remove margin for the last image */
+        }
+
+        .image-item img {
+            width: 100%;
+            height: auto;
+            transition: transform 0.3s ease;
+        }
+    </style>
+</head>
+<body background="static\wepikdashboardnew.jpeg">
+
+<div class="about-container">
+    <h1>About Our Food Journey</h1>
+    <p>Welcome to our food paradise, where flavors come to life!</p>
+
+    <div class="image-gallery">
+        <div class="image-item" onmouseover="zoomIn(this)" onmouseout="zoomOut(this)">
+            <img src="{{ url_for('static', filename='recipesearch.jpg') }}" alt="Image 1">
+        </div>
+        <div class="image-item" onmouseover="zoomIn(this)" onmouseout="zoomOut(this)">
+            <img src="{{ url_for('static', filename='addyourrecipe.jpg') }}" alt="Image 2">
+        </div>
+        <div class="image-item" onmouseover="zoomIn(this)" onmouseout="zoomOut(this)">
+            <img src="{{ url_for('static', filename='to do list.jpg') }}" alt="Image 3">
+        </div>
+    </div>
+   <div>
+    <h3>Our journey began with a passion for creating delightful recipes and sharing them with the world. We believe in the art of cooking and the joy it brings to people's lives.</h3>
+
+    <h3>Explore our collection of recipes, create your to-do list, and add your own culinary masterpieces to the mix. Download your favorite recipes and embark on a culinary adventure with us!</h3>
+
+    <h3>Thank you for being a part of our food community. Happy cooking!</h3>
+   </div>
+    
+</div>
+
+<script>
+    function zoomIn(element) {
+        element.style.transform = 'scale(1.1)';
+        element.style.transition = 'transform 0.3s ease';
+    }
+
+    function zoomOut(element) {
+        element.style.transform = 'scale(1)';
+        element.style.transition = 'transform 0.3s ease';
+    }
+</script>
+
+</body>
+</html>

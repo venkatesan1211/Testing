@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Add this in the <head> section -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <title>Your App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</head>
+<body background="static\wepiksignuppage.jpeg">
+
+<!-- Welcome to Cookalong -->
+
+<!-- Logo and Welcome Note -->
+<div class="logo-container">
+    <img src="{{ url_for('static', filename='wepikcookalonglogo.png') }}" alt="CookAlong Logo" class="logo">
+</div>
+
+<div class="flash-container">
+    {% with messages = get_flashed_messages(category_filter=['signup_success', 'signup_error', 'login_success', 'login_error']) %}
+        {% if messages %}
+            <ul class="flashes">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+</div>
+
+<div class="row">
+    <div class="col-md-6" id="signup-form">
+        <h2>Sign Up</h2>
+        <form action="{{ url_for('signup') }}" method="post">
+            <label for="username">Username:</label>
+            <input type="text" name="username" required>
+
+            <label for="email">Email:</label>
+            <input type="email" name="email" required>
+
+            <div class="password-container">
+                <label for="password">Password:</label>
+                <input type="password" name="password" id="passwordInput" oninput="updateEmoji()" required>
+                <span id="passwordEmoji">🙄</span>
+            </div>
+
+            <button type="submit">Sign Up</button>
+        </form>
+        <br>
+        <p>Already registered? <a href="#" onclick="showLoginForm()">Login</a></p>
+    </div>
+
+    <div class="col-md-6" id="login-form" style="display: none;">
+        <h2>Login</h2>
+        <form action="{{ url_for('login') }}" method="post">
+            <label for="login-username">Username or Email:</label>
+            <input type="text" name="username" id="login-username" required>
+
+            <label for="login-password">Password:</label>
+            <input type="password" name="password" id="login-password" required>
+
+            <button type="submit">Login</button>
+        </form>
+        <br>
+        <p>Not a registered user? <a href="#" onclick="showSignupForm()">Register</a></p>
+    </div>
+</div>
+
+<!-- ... (existing code) ... -->
+
+<script>
+    function showLoginForm() {
+        document.getElementById('signup-form').style.display = 'none';
+        document.getElementById('login-form').style.display = 'block';
+    }
+
+    function showSignupForm() {
+        document.getElementById('signup-form').style.display = 'block';
+        document.getElementById('login-form').style.display = 'none';
+    }
+
+    // Function to update the emoji based on password length
+    function updateEmoji() {
+        var passwordInput = document.getElementById('passwordInput');
+        var passwordEmoji = document.getElementById('passwordEmoji');
+
+        if (passwordInput.value.length >= 6) {
+            // Change emoji to happy if password length is 6 or more
+            passwordEmoji.innerText = '😊';
+        } else {
+            // Keep emoji sad if password length is less than 6
+            passwordEmoji.innerText = '🙄';
+        }
+    }
+</script>
+
+</body>
+</html>
