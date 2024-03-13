@@ -38,10 +38,20 @@
     <img src="{{ url_for('static', filename='images/recipeimages/' + recipe.recipe_image) }}" alt="{{ recipe.recipe_name }}" style="max-width: 450px; height: 450px;">
     
     <h2>Ingredients:</h2>
-    <h3>{{ recipe.recipe_ingredients }}</h3>
+    <ul id="recipeIngredientsList">
+        {% for ingredient in recipe.recipe_ingredients.split('\n') %}
+            <li>{{ ingredient }}</li>
+        {% endfor %}
+    </ul>
 
     <h2>Details:</h2>
-    <p id="recipeDetails">{{ recipe.recipe_details }}</p>
+    <ul id="recipeDetailsList">
+        {% for step in recipe.recipe_details.split('.') %}
+            {% if step.strip() %}
+                <li style="margin-left: 20px;">{{ step }}</li>
+            {% endif %}
+        {% endfor %}
+    </ul>
 
     <!-- Download button -->
     <button id="downloadBtn">Download Recipe as PDF</button>
@@ -57,16 +67,14 @@
     <!-- Add latest jsPDF library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script>
-        
-    var recipeData = {
-        recipe_name: {{ recipe.recipe_name | tojson | safe }},
-        recipe_image: "{{ url_for('static', filename='images/recipeimages/' + recipe.recipe_image) }}",
-        recipe_ingredients: {{ recipe.recipe_ingredients | tojson | safe }},
-        recipe_details: {{ recipe.recipe_details | tojson | safe }}
-    };
-</script>
-
+        var recipeData = {
+            recipe_name: {{ recipe.recipe_name | tojson | safe }},
+            recipe_image: "{{ url_for('static', filename='images/recipeimages/' + recipe.recipe_image) }}",
+            recipe_ingredients: {{ recipe.recipe_ingredients | tojson | safe }},
+            recipe_details: {{ recipe.recipe_details | tojson | safe }}
+        };
     </script>
+
     <script>
         window.jsPDF = window.jspdf.jsPDF;
 
@@ -79,13 +87,19 @@
             var pdf = new jsPDF();
 
             // Add recipe name, image, ingredients, and details to the PDF
-            pdf.text(recipe.recipe_name, 70, 20);  // Centered horizontally
-            pdf.addImage(recipe.recipe_image, 'JPEG', 20, 40, 80, 80);
-            pdf.text('Ingredients:', 20, 220);
-            pdf.text(recipe.recipe_ingredients, 20, 230);
-            pdf.text('Details:', 20, 260);
-            pdf.text(recipe.recipe_details, 20, 270);
+            pdf.text(`Recipe: ${recipe.recipe_name}`, 20, 20); // Title
+            pdf.addImage(recipe.recipe_image, 'JPEG', 20, 30, 80, 80); // Image
+            pdf.text('Ingredients:', 20, 120); // Ingredients title
 
+            // Manually control line breaks for ingredients content
+            var ingredientsLines = pdf.splitTextToSize(recipe.recipe_ingredients, 160);
+            pdf.text(ingredientsLines, 20, 130);
+
+            pdf.text('Details:', 20, 220); // Details title
+
+            // Manually control line breaks for details content
+            var detailsLines = pdf.splitTextToSize(recipe.recipe_details, 160);
+            pdf.text(detailsLines, 20, 230);
 
             // Save the PDF
             pdf.save(`${recipe.recipe_name}.pdf`);
@@ -103,47 +117,57 @@
         });
 
         function createTodoList() {
-            var recipeDetails = document.getElementById('recipeDetails').innerText;
-            var todoListContainer = document.getElementById('todoList');
-            todoListContainer.innerHTML = '';
+    var recipeDetailsList = document.getElementById('recipeDetailsList');
+    var todoListContainer = document.getElementById('todoList');
+    todoListContainer.innerHTML = '';
 
-            // Split recipe details into todo items based on full stops
-            var todoItems = recipeDetails.split('.').filter(Boolean);
+    // Get all the list items in the recipe details
+    var detailsItems = recipeDetailsList.getElementsByTagName('li');
 
-            // Create checkboxes for each todo item
-            todoItems.forEach((item, index) => {
-                var checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.id = 'todoItem' + index;
+    // Create divs for each todo item
+    for (var i = 0; i < detailsItems.length; i++) {
+        var checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = 'todoItem' + i;
 
-                var label = document.createElement('label');
-                label.htmlFor = 'todoItem' + index;
-                label.appendChild(document.createTextNode(item.trim()));
+        var div = document.createElement('div');
+        div.appendChild(checkbox);
 
-                // Check if the item is marked as completed
-                if (localStorage.getItem('todoItem' + index) === 'completed') {
-                    checkbox.checked = true;
-                    label.classList.add('completed');
-                }
+        var label = document.createElement('label');
+        label.htmlFor = 'todoItem' + i;
+        label.appendChild(document.createTextNode(detailsItems[i].textContent.trim()));
 
-                var br = document.createElement('br');
+        div.appendChild(label);
+        todoListContainer.appendChild(div);
 
-                // Add event listener to handle checkbox state changes
-                checkbox.addEventListener('change', function () {
-                    if (this.checked) {
-                        label.classList.add('completed');
-                        localStorage.setItem(this.id, 'completed');
-                    } else {
-                        label.classList.remove('completed');
-                        localStorage.removeItem(this.id);
-                    }
-                });
-
-                todoListContainer.appendChild(checkbox);
-                todoListContainer.appendChild(label);
-                todoListContainer.appendChild(br);
-            });
+        // Check if the item is marked as completed
+        if (localStorage.getItem('todoItem' + i) === 'completed') {
+            checkbox.checked = true;
+            label.classList.add('completed');
         }
+
+        // Add event listener to handle checkbox state changes
+        checkbox.addEventListener('change', createCheckboxChangeListener(label, checkbox));
+
+        // Append a line break after each todo item
+        todoListContainer.appendChild(document.createElement('br'));
+    }
+}
+
+// Closure to capture the correct label for each checkbox
+function createCheckboxChangeListener(label, checkbox) {
+    return function () {
+        if (checkbox.checked) {
+            label.classList.add('completed');
+            localStorage.setItem(checkbox.id, 'completed');
+        } else {
+            label.classList.remove('completed');
+            localStorage.removeItem(checkbox.id);
+        }
+    };
+}
+
+
     </script>
 </body>
 </html>
