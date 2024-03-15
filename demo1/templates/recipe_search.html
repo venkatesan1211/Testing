@@ -8,7 +8,10 @@
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
-            background-color: #f4f4f4;
+            background-size:cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            
         }
 
         form {
@@ -94,7 +97,7 @@
         }
     </style>
 </head>
-<body>
+<body background="static\recipesearchbg.jpeg">
 
 <form action="{{ url_for('recipe_search') }}" method="get">
     <label for="type">Select Type:</label>
@@ -115,7 +118,7 @@
                 <a href="{{ url_for('view_recipe_details', recipe_number=recipe.recipe_number) }}">
                     <img src="{{ url_for('static', filename='images/recipeimages/' + recipe.recipe_image) }}" alt="{{ recipe.recipe_name }}">
                 </a>
-                <h3>{{ recipe.recipe_name }}</h3>
+                <h3 style="color: aliceblue;">{{ recipe.recipe_name }}</h3>
             </div>
         {% endfor %}
     </div>
