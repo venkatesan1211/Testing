@@ -1,10 +1,15 @@
+import os
 import secrets
-from flask import Flask, flash, render_template, request, redirect, session, url_for
+from flask import Flask, flash, render_template, render_template_string, request, redirect, session, url_for
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from urllib.parse import quote_plus
 from flask import jsonify
 from sqlalchemy import text 
+
+UPLOAD_FOLDER = 'static/images/recipeimages'
+
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)
@@ -17,7 +22,7 @@ encoded_password = quote_plus(password)
 app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql://root:{encoded_password}@localhost/savorysync'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 
@@ -164,11 +169,85 @@ def view_recipe_details(recipe_number):
         flash('Recipe not found.', 'error')
         return redirect(url_for('index'))
 
+def generate_unique_filename(recipe_number, filename):
+    _, ext = os.path.splitext(filename)
+    return f"recipe{recipe_number}{ext}"
 
-@app.route('/add_recipes')
+def update_recipe_image_name(recipe_number, new_filename):
+    recipe = Recipe.query.filter_by(recipe_number=recipe_number).first()
+    if recipe:
+        recipe.recipe_image = new_filename
+        db.session.commit()
+    else:
+        # Handle the case where the recipe with the given recipe number is not found
+        flash('Recipe not found', 'error')
+
+def get_next_recipe_number():
+    last_recipe = Recipe.query.order_by(Recipe.recipe_number.desc()).first()
+    if last_recipe:
+        return last_recipe.recipe_number + 1
+    else:
+        return 1  # Assuming the first recipe starts with number 1
+
+success_message = """
+<h2>Recipe added successfully!</h2>
+<p>Please visit the <a href="{{ url_for('recipe_search') }}">recipes page</a> for your recipes.</p>
+<p>If you want to add more recipes, kindly refresh the page.</p>
+"""
+
+@app.route('/add_recipes', methods=['GET', 'POST'])
 def add_recipes():
-    # Add logic for adding recipes
-    return render_template('add_recipes.html')  # Create add_recipes.html template
+    if request.method == 'POST':
+        # Handle POST request to add recipes
+        recipe_type = request.form['recipeType']
+        recipe_name = request.form['recipeName']
+        recipe_ingredients = request.form['recipeIngredients']
+        recipe_details = request.form['recipeDetails']
+
+        # Check if the post request has the file part
+        if 'recipeImage' not in request.files:
+            flash('No file part', 'error')
+            return redirect(request.url)
+
+        recipe_image = request.files['recipeImage']
+
+        # If the user does not select a file, the browser submits an empty part without a filename
+        if recipe_image.filename == '':
+            flash('No selected file', 'error')
+            return redirect(request.url)
+
+        if recipe_image:
+            # Generate a unique filename
+            new_filename = generate_unique_filename(get_next_recipe_number(), recipe_image.filename)
+
+            # Save the uploaded image to the correct directory using absolute path
+            upload_path = os.path.join(app.root_path, app.config['UPLOAD_FOLDER'])
+            recipe_image.save(os.path.join(upload_path, new_filename))
+
+            # Update the recipe image name in the database
+            recipe = Recipe(
+                recipe_type=recipe_type,
+                recipe_image=new_filename,
+                recipe_name=recipe_name,
+                recipe_ingredients=recipe_ingredients,
+                recipe_details=recipe_details
+            )
+            db.session.add(recipe)
+            db.session.commit()
+
+            flash('Recipe added successfully!', 'success')
+
+            # Render the success message template
+            return render_template_string(success_message)
+
+        else:
+            flash('Failed to add recipe', 'error')
+            return redirect(url_for('add_recipes'))
+
+    else:
+        # Handle GET request to render the add recipes form
+        return render_template('add_recipes.html')
+
 
 @app.route('/to_do_list_recipe')
 def to_do_list_recipe():
