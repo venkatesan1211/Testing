@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Recipes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f2f2f2;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        select, input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            resize: vertical;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <form action="{{ url_for('add_recipes') }}" method="post" enctype="multipart/form-data">
+        <label for="recipeType">Recipe Type:</label>
+        <select name="recipeType" id="recipeType" required>
+            <option value="veg">Veg</option>
+            <option value="nonveg">Non-Veg</option>
+        </select>
+
+        <label for="recipeImage">Upload Recipe Image:</label>
+        <input type="file" name="recipeImage" id="recipeImage" accept="image/*" required>
+
+        <label for="recipeName">Recipe Name:</label>
+        <input type="text" name="recipeName" id="recipeName" required>
+
+        <label for="recipeIngredients">Recipe Ingredients:</label>
+        <textarea name="recipeIngredients" id="recipeIngredients" rows="auto" required placeholder="Enter ingredients separated by space like (e.g potato tomato)"></textarea>
+
+        <label for="recipeDetails">Recipe Details:</label>
+        <textarea name="recipeDetails" id="recipeDetails" rows="auto" required placeholder="Enter recipe instructions separated by full stops (.)"></textarea>
+
+        <button type="submit">Submit Recipe</button>
+    </form>
+
+</body>
+</html>
