@@ -75,7 +75,6 @@ def signup():
     return redirect(url_for('index'))
 
 @app.route('/login', methods=['POST'])
-@app.route('/login', methods=['POST'])
 def login():
     username_or_email = request.form['username']
     password = request.form['password']
