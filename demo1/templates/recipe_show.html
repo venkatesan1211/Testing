@@ -83,27 +83,47 @@
         });
 
         function downloadRecipe(recipe) {
-            // Create a new jsPDF instance
-            var pdf = new jsPDF();
+    // Create a new jsPDF instance
+    var pdf = new jsPDF();
 
-            // Add recipe name, image, ingredients, and details to the PDF
-            pdf.text(`Recipe: ${recipe.recipe_name}`, 20, 20); // Title
-            pdf.addImage(recipe.recipe_image, 'JPEG', 20, 30, 80, 80); // Image
-            pdf.text('Ingredients:', 20, 120); // Ingredients title
+    // Add recipe name, image, ingredients, and details to the PDF
+    pdf.text(`Recipe: ${recipe.recipe_name}`, 20, 20); // Title
+    pdf.addImage(recipe.recipe_image, 'JPEG', 20, 30, 80, 80); // Image
+    pdf.text('Ingredients:', 20, 120); // Ingredients title
 
-            // Manually control line breaks for ingredients content
-            var ingredientsLines = pdf.splitTextToSize(recipe.recipe_ingredients, 160);
-            pdf.text(ingredientsLines, 20, 130);
+    // Manually control line breaks for ingredients content
+    var ingredientsLines = pdf.splitTextToSize(recipe.recipe_ingredients, 160);
+    pdf.text(ingredientsLines, 20, 130);
 
-            pdf.text('Details:', 20, 220); // Details title
+    pdf.text('Details:', 20, 220); // Details title
 
-            // Manually control line breaks for details content
-            var detailsLines = pdf.splitTextToSize(recipe.recipe_details, 160);
-            pdf.text(detailsLines, 20, 230);
+    // Manually control line breaks for details content and paginate
+    var detailsLines = pdf.splitTextToSize(recipe.recipe_details, 160);
+    var y = 230; // Initial Y position for details content
 
-            // Save the PDF
-            pdf.save(`${recipe.recipe_name}.pdf`);
+    // Function to add a new page if content overflows
+    function addNewPage() {
+        pdf.addPage();
+        y = 20; // Reset Y position for new page
+    }
+
+    // Iterate through each line of details content
+    detailsLines.forEach(function (line) {
+        // Check if the line fits in the current page
+        if (y + 10 > pdf.internal.pageSize.height) {
+            // If not, add a new page
+            addNewPage();
         }
+
+        // Add the line to the PDF
+        pdf.text(line, 20, y);
+        y += 10; // Increment Y position for the next line
+    });
+
+    // Save the PDF
+    pdf.save(`${recipe.recipe_name}.pdf`);
+}
+
 
         document.getElementById('toggleTodoBtn').addEventListener('click', () => {
             var todoList = document.getElementById('todoList');
