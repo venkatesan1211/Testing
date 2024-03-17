@@ -70,14 +70,3 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-window.addEventListener('scroll', function() {
-    var typingContainer = document.querySelector('.typing-container');
-
-    // Check if the typing container is in the viewport
-    if (isElementInViewport(typingContainer)) {
-        // Trigger the typing animation when it comes into view
-        var typed = new Typed('#typing-text', typingConfig);
-    }
-});
-
-// Function to check if an element is in the viewport
