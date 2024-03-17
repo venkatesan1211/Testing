@@ -146,7 +146,7 @@ def recipe_search():
 
         # Render the template with the obtained recipes
         return render_template('recipe_search.html', recipes=recipe_list)
-    else:
+    else:                                                                                         
         # No recipes found
         flash('No recipes found.', 'recipe_search_info')
         return render_template('recipe_search.html', recipes=[])
