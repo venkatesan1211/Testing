@@ -174,6 +174,16 @@ label {
     justify-content: flex-end; /* Align at the end */
 }
 
+.cook {
+    align-items: center;
+    justify-content: center;
+    color:#f4f4f4;
+    margin-top: 340px;
+    margin-left: 20px;
+    font-family: fantasy;
+    
+    
+}
 
 
 .menu-item {
@@ -243,18 +253,7 @@ button:hover {
 }
 /* Add this CSS to your existing style.css or create a new CSS file */
 
-.chart-container {
-    width: 50%;
-    max-width: 450px;
-    margin: 20px auto;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    color: #ff8f53d1;
-    background-color: #ffffff0e;
-    position: relative; /* Add relative positioning */
-    top: 50px; /* Adjust the distance from the top */
-}
+
 
 /* Add additional styling as needed */
 @media only screen and (max-width: 600px) {

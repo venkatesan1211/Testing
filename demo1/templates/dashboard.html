@@ -8,10 +8,9 @@
 
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <!-- Anime.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.0/anime.min.js"></script>
 
-<!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
 
     <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
@@ -34,11 +33,14 @@
             <a class="menu-item" href="{{ url_for('logout') }}">Logout</a>
         </div>
     </div>
-    
-    <div class="chart-container">
-        <h1>Recipe Statistics Chart</h1>
-        <canvas id="recipeStatisticsChart"></canvas>
+    <div class="cook">
+        <h1>welcome to CookAlong</h1>
     </div>
+   
+    
+    
+        
+  
     
     <img src="{{ url_for('static', filename='hero.png') }}" alt="dashimg" class="dashimg">
 </body>
