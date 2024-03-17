@@ -8,13 +8,15 @@
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
-            background-color: #f2f2f2;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
         }
 
         form {
             max-width: 600px;
             margin: 0 auto;
-            background-color: #fff;
+            background-color: #ffffffe0;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -51,9 +53,10 @@
         }
     </style>
 </head>
-<body>
+<body background="static\wepikaddrecipesbg.jpeg">
 
     <form action="{{ url_for('add_recipes') }}" method="post" enctype="multipart/form-data">
+        <h1>Add your favourite recipes </h1>
         <label for="recipeType">Recipe Type:</label>
         <select name="recipeType" id="recipeType" required>
             <option value="veg">Veg</option>
@@ -67,7 +70,7 @@
         <input type="text" name="recipeName" id="recipeName" required>
 
         <label for="recipeIngredients">Recipe Ingredients:</label>
-        <textarea name="recipeIngredients" id="recipeIngredients" rows="auto" required placeholder="Enter ingredients separated by space like (e.g potato tomato)"></textarea>
+        <textarea name="recipeIngredients" id="recipeIngredients" rows="auto" required placeholder="Enter each ingredients in (newline)"></textarea>
 
         <label for="recipeDetails">Recipe Details:</label>
         <textarea name="recipeDetails" id="recipeDetails" rows="auto" required placeholder="Enter recipe instructions separated by full stops (.)"></textarea>
